@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class TerrainGeneratorWithSand : MonoBehaviour
 {
+    private const float NoiseLimit = 1000000;
+
     //Header c'est comme une étiquette ca creer une box avec ce qu'il y a en dessous
     [Header("Terrain Settings")] // box settings du terrain modifiable
 
@@ -23,27 +25,26 @@ public class TerrainGeneratorWithSand : MonoBehaviour
     [Range (0, 1)]
     public float SandMaxThreshold = 0.5f;
 
-    void Start()
+   
+    public void GenerateTerrain()
     {
-        GenerateTerrain();
-    }
+        Vector2 noiseOffset = new Vector2(Random.Range(0, NoiseLimit), Random.Range(0, NoiseLimit));
 
-    void GenerateTerrain()
-    {
         for (int z = 0; z < gridHeight; z++) // tant que la hauteur est plus bas que "gridHeight" la valeur de z est augmenter de 1
         {
             for (int x = 0; x < gridWidth; x++) // a chaque itération x est incrémenté de 1
             {
-
-
                 // On créer un plaque
                 GameObject plate = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                plate.name = $"Cube ({x}; {z})";
+                plate.transform.SetParent(transform);
 
                 // on positionne la plaque sur la grille 
                 plate.transform.position = new Vector3(x * plateSize, 0, z * plateSize); //détermine la position de l'objet 
                 plate.transform.localScale = new Vector3(plateSize, 1, plateSize); // definit la taille/echelle de l'objet
-
-                float noiseValue = Mathf.PerlinNoise(x / noiseScale, z / noiseScale);
+                
+                float noiseValue = Mathf.PerlinNoise(noiseOffset.x + (float)x / gridWidth * noiseScale, noiseOffset.y + (float)z / gridHeight * noiseScale);
+                //float noiseValue = Mathf.PerlinNoise(x / noiseScale + Random.Range(noiseScale, noiseScale), z / noiseScale + Random.Range(noiseScale, noiseScale));
                 bool isWater = noiseValue < WaterMaxThreshold;
                 bool isSand = noiseValue < SandMaxThreshold;
 
@@ -52,6 +53,7 @@ public class TerrainGeneratorWithSand : MonoBehaviour
 
         }
 
+        Debug.Log($"Generated terrain: child count = {transform.childCount}");
     }
 
     void AssignPlateType(GameObject plate, bool isWater, bool isSand)
