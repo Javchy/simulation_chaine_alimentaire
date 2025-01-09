@@ -62,9 +62,10 @@ public class PanthereGenerator : MonoBehaviour
     
     Vector3 GetRandomPosition()
     {
-        float x = Random.Range(-20f, 20f);
-        float z = Random.Range(-20f, 20f);
-        return new Vector3(x, 0, z);
+        float x = Random.Range(0f, 299f);
+        float z = Random.Range(0f, 299f);
+
+        return new Vector3(x, 2f, z); // Position au sol
     }
 
 
