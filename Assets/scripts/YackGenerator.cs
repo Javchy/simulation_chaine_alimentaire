@@ -63,8 +63,9 @@ public class YackGenerator : MonoBehaviour
     // Génère une position aléatoire dans la scène
     Vector3 GetRandomPosition()
     {
-        float x = Random.Range(-10f, 10f);
-        float z = Random.Range(-10f, 10f);
-        return new Vector3(x, 0, z); // Position au sol
+        float x = Random.Range(0f, 299f);
+        float z = Random.Range(0f, 299f);
+      
+        return new Vector3(x, 2f, z); // Position au sol
     }
 }
